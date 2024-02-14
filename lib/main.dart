@@ -1,3 +1,4 @@
+import 'package:bizkit/src/res/colors.dart';
 import 'package:bizkit/src/res/styles.dart';
 import 'package:bizkit/src/views/home.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfffbf8f6),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
