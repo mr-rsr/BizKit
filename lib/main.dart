@@ -1,5 +1,6 @@
 import 'package:bizkit/src/res/colors.dart';
 import 'package:bizkit/src/res/styles.dart';
+import 'package:bizkit/src/views/create.dart';
 import 'package:bizkit/src/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: null,
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -115,12 +117,30 @@ class _MyHomePageState extends State<MyHomePage>
           const SizedBox(width: 20)
         ],
       ),
-      body: TabBarView(controller: _tabController, children: const [
-        HomePage(),
-        Text("HEllo"),
-        Text("HEllo"),
-        Text("HEllo")
-      ]),
+      body: SizedBox.expand(
+        child: Column(
+          children: [
+            Expanded(
+              child: TabBarView(controller: _tabController, children: const [
+                HomePage(),
+                CreatePage(),
+                Text("HEllo"),
+                Text("HEllo")
+              ]),
+            ),
+            SizedBox(
+              height: 30,
+              child: Center(
+                child: Text("2024 © Raj Aryan",
+                    style: GoogleFonts.lato(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: lightTextColor)),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
