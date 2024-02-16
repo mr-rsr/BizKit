@@ -19,9 +19,11 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.fromLTRB(0.05 * width, 50, 0.05 * width, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Welcome to",
                     style: customTextStyle(48, fontWeight: FontWeight.bold)),

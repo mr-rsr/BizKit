@@ -1,5 +1,6 @@
 import 'package:bizkit/src/res/colors.dart';
 import 'package:bizkit/src/res/styles.dart';
+import 'package:bizkit/src/views/about.dart';
 import 'package:bizkit/src/views/create.dart';
 import 'package:bizkit/src/views/home.dart';
 import 'package:flutter/material.dart';
@@ -122,9 +123,9 @@ class _MyHomePageState extends State<MyHomePage>
           children: [
             Expanded(
               child: TabBarView(controller: _tabController, children: const [
+                AboutPage(),
                 HomePage(),
                 CreatePage(),
-                Text("HEllo"),
                 Text("HEllo")
               ]),
             ),
