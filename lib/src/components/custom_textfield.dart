@@ -19,7 +19,7 @@ class CustomTextfield extends StatelessWidget {
       this.onTap,
       this.suffixIcon,
       this.maxLine,
-      this.readOnly});
+      this.obscure});
 
   final TextEditingController controller;
   final String? label;
@@ -29,14 +29,14 @@ class CustomTextfield extends StatelessWidget {
   final String? Function()? onTap;
   final Widget? suffixIcon;
   final int? maxLine;
-  final bool? readOnly;
+  final bool? obscure;
 
   @override
   Widget build(BuildContext context) {
     // final themeProvider = Provider.of<ThemeProvider>(context);
     //bool isDark = themeProvider.getDarkMode;
     return TextFormField(
-      readOnly: readOnly ?? false,
+      obscureText: obscure ?? false,
       onTap: onTap,
       validator: validate ??
           (value) {
@@ -47,7 +47,7 @@ class CustomTextfield extends StatelessWidget {
           },
       keyboardType: keyboardType,
       controller: controller,
-      maxLines: 8,
+      maxLines: 1,
       minLines: 1,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(

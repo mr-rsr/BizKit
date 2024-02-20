@@ -1,5 +1,10 @@
-import 'package:bizkit/src/components/custom_textfield.dart';
+import 'package:bizkit/src/components/basic_detail.dart';
+import 'package:bizkit/src/res/colors.dart';
 import 'package:bizkit/src/res/styles.dart';
+import 'package:bizkit/src/views/create/bmc.dart';
+import 'package:bizkit/src/views/create/identity.dart';
+import 'package:bizkit/src/views/create/pyi.dart';
+import 'package:bizkit/src/views/create/swot.dart';
 import 'package:flutter/material.dart';
 
 class CreatePage extends StatefulWidget {
@@ -10,6 +15,7 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
+  bool generate = false;
   TextEditingController industryController = TextEditingController();
   TextEditingController targetAudience = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -26,113 +32,92 @@ class _CreatePageState extends State<CreatePage> {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-        child: Center(
-            child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 48.0),
-      child: Card(
-          elevation: 3,
-          shadowColor: Colors.amber,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.amberAccent, width: 1),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Form(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
-              child: ListView(
-                padding: const EdgeInsets.all(48),
-                shrinkWrap: true,
-                children: [
-                  Center(
-                    child: Text("Basic Details",
-                        style:
-                            customTextStyle(24, fontWeight: FontWeight.w600)),
-                  ),
-                  const SizedBox(height: 20),
-                  InputDetailRow(
-                      label: "Industry",
-                      industryController: industryController,
-                      hint: "Inventory Management"),
-                  InputDetailRow(
-                      label: "Target Audience",
-                      industryController: targetAudience,
-                      hint: "Warehouse"),
-                  InputDetailRow(
-                      label: "Description",
-                      industryController: descriptionController,
-                      hint: "A Software..."),
-                  InputDetailRow(
-                      label: "Key Benefits",
-                      industryController: benefitsController,
-                      hint: "smart stock management, ..."),
-                  const SizedBox(height: 20),
-                  UnconstrainedBox(
-                    child: SizedBox(
-                      width: 150,
-                      height: 30,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              elevation: 2,
-                              backgroundColor: Colors.amber,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                          onPressed: () => {},
-                          child: Text(
-                            "Generate",
-                            style: customTextStyle(
-                              14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )),
-    )));
+        child: Padding(
+            padding: const EdgeInsets.all(48.0),
+            child: generate
+                ? const GeneratePage()
+                : BasicDetailCard(
+                    industryController: industryController,
+                    targetAudience: targetAudience,
+                    descriptionController: descriptionController,
+                    benefitsController: benefitsController,
+                    onPressed: () {
+                      setState(() {
+                        generate = true;
+                      });
+                    },
+                  )));
   }
 }
 
-class InputDetailRow extends StatelessWidget {
-  const InputDetailRow({
-    super.key,
-    required this.industryController,
-    required this.label,
-    required this.hint,
-  });
+class GeneratePage extends StatefulWidget {
+  const GeneratePage({super.key});
 
-  final TextEditingController industryController;
-  final String label;
-  final String hint;
+  @override
+  State<GeneratePage> createState() => _GeneratePageState();
+}
+
+class _GeneratePageState extends State<GeneratePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * .5,
-        child: LayoutBuilder(builder: (context, constraint) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: customTextStyle(16, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                width: constraint.maxWidth * .6,
-                child: CustomTextfield(
-                  controller: industryController,
-                  hint: hint,
-                ),
-              ),
-            ],
-          );
-        }),
-      ),
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * .8,
+            height: 50,
+            child: TabBar(
+                labelPadding: const EdgeInsets.all(0),
+                indicatorPadding: const EdgeInsets.only(bottom: 12),
+                indicatorSize: TabBarIndicatorSize.label,
+                unselectedLabelColor: Colors.black54,
+                dividerColor: Colors.black,
+                labelColor: lightTextColor,
+                labelStyle: customTextStyle(20,
+                    fontWeight: FontWeight.bold, color: lightTextColor),
+                unselectedLabelStyle:
+                    customTextStyle(18, fontWeight: FontWeight.bold),
+                indicatorColor: Colors.amber,
+                controller: _tabController,
+                tabs: const [
+                  Tab(
+                    child: Text(
+                      "Identity",
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      "Business Model Canvas",
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      "Pitch Your Idea",
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      "SWOT",
+                    ),
+                  ),
+                ]),
+          ),
+        ),
+        Expanded(
+            child: TabBarView(
+                controller: _tabController,
+                children: const [IdentityPage(), BMC(), Pyi(), Swot()]))
+      ],
     );
   }
 }

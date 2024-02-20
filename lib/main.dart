@@ -1,13 +1,37 @@
 import 'package:bizkit/src/res/colors.dart';
 import 'package:bizkit/src/res/styles.dart';
+import 'package:bizkit/src/services/network/auth_helper.dart';
 import 'package:bizkit/src/views/about.dart';
+import 'package:bizkit/src/views/account.dart';
 import 'package:bizkit/src/views/create.dart';
 import 'package:bizkit/src/views/home.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyBDdf8G76QoMFFDdfTmuwTPJiOUqbA3RtM",
+          authDomain: "hartai.firebaseapp.com",
+          projectId: "hartai",
+          storageBucket: "hartai.appspot.com",
+          messagingSenderId: "484141652985",
+          appId: "1:484141652985:web:425169f34b745cc9957b28"),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => Auth()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -41,8 +65,35 @@ class _MyHomePageState extends State<MyHomePage>
     _tabController = TabController(length: 4, vsync: this);
   }
 
+  Future<void> toLaunchUrl(Uri url) async {
+    if (kIsWeb) {
+      if (!await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      )) {
+        throw Exception('Could not launch $url');
+      }
+    } else {
+      if (!await launchUrl(url)) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Could Not launch the $url",
+            style: GoogleFonts.merriweather(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+                fontSize: 24,
+                color: Colors.black),
+          ),
+        ));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Uri github = Uri.parse('https://github.com/mr-rsr');
+    final Uri linkedin = Uri.parse("https://www.linkedin.com/in/mrrsr");
     return Scaffold(
       bottomSheet: null,
       backgroundColor: backgroundColor,
@@ -88,6 +139,8 @@ class _MyHomePageState extends State<MyHomePage>
                 indicatorPadding: const EdgeInsets.only(bottom: 16),
                 indicatorSize: TabBarIndicatorSize.label,
                 indicatorColor: Colors.amber,
+                padding: const EdgeInsets.all(0),
+                // labelPadding:
                 controller: _tabController,
                 tabs: [
                   Tab(
@@ -98,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   Tab(
                     child: Text(
-                      "Create",
+                      "Generate",
                       style: customTextStyle(16, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -123,25 +176,40 @@ class _MyHomePageState extends State<MyHomePage>
           children: [
             Expanded(
               child: TabBarView(controller: _tabController, children: const [
-                AboutPage(),
                 HomePage(),
                 CreatePage(),
-                Text("HEllo")
+                AboutPage(),
+                AccountPage(),
               ]),
             ),
             SizedBox(
               height: 30,
-              child: Center(
-                child: Text("2024 © Raj Aryan",
-                    style: GoogleFonts.lato(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: lightTextColor)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("2024 © Raj Aryan",
+                      style: GoogleFonts.lato(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: lightTextColor)),
+                  const SizedBox(width: 10),
+                  socialMediaIcon(github, "../assets/images/github.png"),
+                  const SizedBox(width: 5),
+                  socialMediaIcon(linkedin, "../assets/images/linkedin.png")
+                ],
               ),
             )
           ],
         ),
       ),
+    );
+  }
+
+  GestureDetector socialMediaIcon(Uri github, String imagePath) {
+    return GestureDetector(
+      onTap: () => toLaunchUrl(github),
+      child: Image(image: AssetImage(imagePath), width: 15, height: 15),
     );
   }
 }
