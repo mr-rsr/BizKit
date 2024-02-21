@@ -58,7 +58,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -71,7 +71,16 @@ class _MyHomePageState extends State<MyHomePage>
         url,
         mode: LaunchMode.externalApplication,
       )) {
-        throw Exception('Could not launch $url');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Could Not launch the $url",
+            style: GoogleFonts.merriweather(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+                fontSize: 24,
+                color: Colors.black),
+          ),
+        ));
       }
     } else {
       if (!await launchUrl(url)) {
@@ -92,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     final Uri github = Uri.parse('https://github.com/mr-rsr');
     final Uri linkedin = Uri.parse("https://www.linkedin.com/in/mrrsr");
     return Scaffold(
@@ -131,43 +141,52 @@ class _MyHomePageState extends State<MyHomePage>
         ),
         automaticallyImplyLeading: false,
         actions: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .3,
-            height: 50,
-            child: TabBar(
-                labelPadding: const EdgeInsets.all(0),
-                indicatorPadding: const EdgeInsets.only(bottom: 16),
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorColor: Colors.amber,
-                padding: const EdgeInsets.all(0),
-                // labelPadding:
-                controller: _tabController,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      "Home",
-                      style: customTextStyle(16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      "Generate",
-                      style: customTextStyle(16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Tab(
-                    child: Text("About",
-                        style:
-                            customTextStyle(16, fontWeight: FontWeight.bold)),
-                  ),
-                  Tab(
-                    child: Text(
-                      "Account",
-                      style: customTextStyle(16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ]),
-          ),
+          width < 720
+              ? IconButton(
+                  onPressed: () {
+                    _key.currentState!.openDrawer();
+                  },
+                  icon: const Icon(Icons.menu))
+              : SizedBox(
+                  width: width < 1000 ? width * .42 : width * .3,
+                  height: 50,
+                  child: TabBar(
+                      labelPadding: const EdgeInsets.all(0),
+                      indicatorPadding: const EdgeInsets.only(bottom: 16),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorColor: Colors.amber,
+                      padding: const EdgeInsets.all(0),
+                      // labelPadding:
+                      controller: _tabController,
+                      tabs: [
+                        Tab(
+                          child: Text(
+                            "Home",
+                            style: customTextStyle(16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            "Generate",
+                            style: customTextStyle(16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Tab(
+                          child: Text("About",
+                              style: customTextStyle(16,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        Tab(
+                          child: Text(
+                            "Account",
+                            style: customTextStyle(16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ]),
+                ),
           const SizedBox(width: 20)
         ],
       ),
@@ -175,16 +194,19 @@ class _MyHomePageState extends State<MyHomePage>
         child: Column(
           children: [
             Expanded(
-              child: TabBarView(controller: _tabController, children: const [
-                HomePage(),
-                CreatePage(),
-                AboutPage(),
-                AccountPage(),
+              child: TabBarView(controller: _tabController, children: [
+                const CreatePage(),
+                const HomePage(),
+                SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: const SingleChildScrollView(child: AboutPage())),
+                const AuthPage(),
               ]),
             ),
             SizedBox(
               height: 30,
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

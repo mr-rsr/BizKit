@@ -53,7 +53,7 @@ class CustomTextfield extends StatelessWidget {
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
-        labelText: label,
+        labelText: null,
         hintText: hint,
         hintStyle: TextStyle(
             overflow: TextOverflow.ellipsis,

@@ -5,6 +5,8 @@ import 'package:bizkit/src/views/create/bmc.dart';
 import 'package:bizkit/src/views/create/identity.dart';
 import 'package:bizkit/src/views/create/pyi.dart';
 import 'package:bizkit/src/views/create/swot.dart';
+import 'package:bizkit/src/views/welcome.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CreatePage extends StatefulWidget {
@@ -31,22 +33,25 @@ class _CreatePageState extends State<CreatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
     return SizedBox.expand(
         child: Padding(
-            padding: const EdgeInsets.all(48.0),
-            child: generate
-                ? const GeneratePage()
-                : BasicDetailCard(
-                    industryController: industryController,
-                    targetAudience: targetAudience,
-                    descriptionController: descriptionController,
-                    benefitsController: benefitsController,
-                    onPressed: () {
-                      setState(() {
-                        generate = true;
-                      });
-                    },
-                  )));
+            padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 16),
+            child: auth.currentUser != null
+                ? const WelcomeScreen()
+                : !generate
+                    ? const GeneratePage()
+                    : BasicDetailCard(
+                        industryController: industryController,
+                        targetAudience: targetAudience,
+                        descriptionController: descriptionController,
+                        benefitsController: benefitsController,
+                        onPressed: () {
+                          setState(() {
+                            generate = true;
+                          });
+                        },
+                      )));
   }
 }
 
@@ -69,12 +74,13 @@ class _GeneratePageState extends State<GeneratePage>
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Align(
           alignment: Alignment.centerLeft,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * .8,
+            width: width < 360 ? width : width * .8,
             height: 50,
             child: TabBar(
                 labelPadding: const EdgeInsets.all(0),
@@ -83,29 +89,29 @@ class _GeneratePageState extends State<GeneratePage>
                 unselectedLabelColor: Colors.black54,
                 dividerColor: Colors.black,
                 labelColor: lightTextColor,
-                labelStyle: customTextStyle(20,
+                labelStyle: customTextStyle(width < 360 ? 14 : 18,
                     fontWeight: FontWeight.bold, color: lightTextColor),
-                unselectedLabelStyle:
-                    customTextStyle(18, fontWeight: FontWeight.bold),
+                unselectedLabelStyle: customTextStyle(width < 360 ? 12 : 16,
+                    fontWeight: FontWeight.bold),
                 indicatorColor: Colors.amber,
                 controller: _tabController,
-                tabs: const [
-                  Tab(
+                tabs: [
+                  const Tab(
                     child: Text(
                       "Identity",
                     ),
                   ),
                   Tab(
                     child: Text(
-                      "Business Model Canvas",
+                      width < 1200 ? "BMC" : "Business Model Canvas",
                     ),
                   ),
                   Tab(
                     child: Text(
-                      "Pitch Your Idea",
+                      width < 1200 ? "PYI" : "Pitch Your Idea",
                     ),
                   ),
-                  Tab(
+                  const Tab(
                     child: Text(
                       "SWOT",
                     ),

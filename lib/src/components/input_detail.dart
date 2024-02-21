@@ -19,26 +19,38 @@ class InputDetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * .5,
+        // width: MediaQuery.of(context).size.width * .5,
         child: LayoutBuilder(builder: (context, constraint) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: customTextStyle(16, fontWeight: FontWeight.w600),
+          List<Widget> children = [
+            Text(
+              label,
+              style: customTextStyle(constraint.maxWidth > 400 ? 16 : 14,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            SizedBox(
+              width: constraint.maxWidth > 400
+                  ? (constraint.maxWidth * .6)
+                  : constraint.maxWidth,
+              child: CustomTextfield(
+                controller: industryController,
+                hint: hint,
               ),
-              SizedBox(
-                width: constraint.maxWidth * .6,
-                child: CustomTextfield(
-                  controller: industryController,
-                  hint: hint,
-                ),
-              ),
-            ],
-          );
+            ),
+          ];
+          return constraint.maxWidth > 400
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisSize: MainAxisSize.min,
+                  children: children)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisSize: MainAxisSize.min,
+                  children: children);
         }),
       ),
     );

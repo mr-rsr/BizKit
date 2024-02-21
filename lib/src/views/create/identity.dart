@@ -1,4 +1,4 @@
-import 'package:bizkit/src/components/section.dart';
+import 'package:bizkit/src/components/four_section.dart';
 import 'package:bizkit/src/res/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +7,8 @@ class IdentityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
+    debugPrint("identity");
+    return Container(
       // height: 1000,
       decoration: BoxDecoration(
           border: Border.all(), borderRadius: BorderRadius.circular(5)),
@@ -17,7 +17,7 @@ class IdentityPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -51,62 +51,6 @@ class IdentityPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    ));
-  }
-}
-
-class FourSection extends StatefulWidget {
-  const FourSection({
-    super.key,
-    required this.label1,
-    required this.label2,
-    required this.label3,
-    required this.label4,
-  });
-  final String label1;
-  final String label2;
-  final String label3;
-  final String label4;
-  @override
-  State<FourSection> createState() => _FourSectionState();
-}
-
-class _FourSectionState extends State<FourSection> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(), borderRadius: BorderRadius.circular(5)),
-      child: SingleChildScrollView(
-        child: SizedBox(
-            height: 800,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      SectionComponent(label: widget.label1),
-                      const SizedBox(width: 2),
-                      SectionComponent(label: widget.label2),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Expanded(
-                  child: Row(
-                    children: [
-                      SectionComponent(label: widget.label3),
-                      const SizedBox(width: 2),
-                      SectionComponent(label: widget.label4),
-                    ],
-                  ),
-                ),
-              ],
-            )),
       ),
     );
   }

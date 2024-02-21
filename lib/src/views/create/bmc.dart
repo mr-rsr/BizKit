@@ -12,13 +12,14 @@ class BMC extends StatefulWidget {
 class _BMCState extends State<BMC> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
         child: Container(
       // height: 1000,
       decoration: BoxDecoration(
           border: Border.all(), borderRadius: BorderRadius.circular(5)),
       child: SizedBox(
-        height: 1200,
+        height: width < 800 ? null : 1200,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,64 +47,134 @@ class _BMCState extends State<BMC> {
               ),
             ),
             // const SizedBox(height: 10),
-            const Expanded(
-              flex: 5,
-              child: Row(
-                children: [
-                  SizedBox(width: 2),
-                  SectionComponent(
-                    label: "Key Benefits",
-                  ),
-                  SizedBox(width: 2),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SectionComponent(
+            width < 800
+                ? ListView(
+                    shrinkWrap: true,
+                    children: const [
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
+                          label: "Key Benefits",
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
                           label: "Key Activities",
                         ),
-                        SectionComponent(
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
                           label: "Key Resources",
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 2),
-                  SectionComponent(
-                    label: "Value Propositions",
-                  ),
-                  SizedBox(width: 2),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SectionComponent(
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
+                          label: "Value Propositions",
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
                           label: "Customer Relations",
                         ),
-                        SectionComponent(
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
                           label: "Customer Channels",
                         ),
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
+                          label: "Customer Segments",
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
+                          label: "Cost Structure",
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      SizedBox(
+                        height: 400,
+                        child: SectionComponent(
+                          label: "Revenue Streams",
+                        ),
+                      ),
+                    ],
+                  )
+                : const Flexible(
+                    flex: 5,
+                    child: Row(
+                      children: [
+                        SizedBox(width: 2),
+                        SectionComponent(
+                          label: "Key Benefits",
+                        ),
+                        SizedBox(width: 2),
+                        Flexible(
+                          child: Column(
+                            children: [
+                              SectionComponent(
+                                label: "Key Activities",
+                              ),
+                              SectionComponent(
+                                label: "Key Resources",
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 2),
+                        SectionComponent(
+                          label: "Value Propositions",
+                        ),
+                        SizedBox(width: 2),
+                        Flexible(
+                          child: Column(
+                            children: [
+                              SectionComponent(
+                                label: "Customer Relations",
+                              ),
+                              SectionComponent(
+                                label: "Customer Channels",
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 2),
+                        SectionComponent(
+                          label: "Customer Segments",
+                        ),
+                        SizedBox(width: 2),
                       ],
                     ),
                   ),
-                  SizedBox(width: 2),
-                  SectionComponent(
-                    label: "Customer Segments",
-                  ),
-                  SizedBox(width: 2),
-                ],
-              ),
-            ),
-            const Expanded(
-              flex: 2,
-              child: Row(children: [
-                SectionComponent(
-                  label: "Cost Structure",
-                ),
-                SizedBox(width: 2),
-                SectionComponent(
-                  label: "Revenue Streams",
-                ),
-              ]),
-            )
+            width < 800
+                ? const SizedBox()
+                : const Expanded(
+                    flex: 2,
+                    child: Row(children: [
+                      SectionComponent(
+                        label: "Cost Structure",
+                      ),
+                      SizedBox(width: 2),
+                      SectionComponent(
+                        label: "Revenue Streams",
+                      ),
+                    ]),
+                  )
           ],
         ),
       ),
